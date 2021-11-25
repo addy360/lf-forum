@@ -23,8 +23,9 @@ class PostController extends Controller
     {
         $posts = Post::withCount('comments')
             ->with(['author' => function ($q) {
-                $q->select('id', 'username')->get();
+                $q->select('id', 'username');
             }])
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return response(["data" => $posts]);
