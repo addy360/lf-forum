@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum'])
+            ->except(['index', 'show']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +42,7 @@ class PostController extends Controller
             "body" => ['required']
         ]);
 
-        $clean_data['user_id'] = 1;
+        $clean_data['user_id'] = Auth::user()->id;;
 
         $created_post = Post::create($clean_data);
 
