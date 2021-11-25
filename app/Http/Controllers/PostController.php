@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CheckPostOwner;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,8 +79,15 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post, CheckPostOwner $postService)
     {
+        // Using middleware would have been great, for now this will do :)
+        if (!$postService::is_owner($post, Auth::user())) {
+            return response([
+                "message" => "Your are not authorized to edit this post."
+            ], 401);
+        }
+
         $clean_data = $request->validate([
             "title" => ['required'],
             "body" => ['required']
@@ -98,8 +106,14 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post, CheckPostOwner $postService)
     {
+        if (!$postService::is_owner($post, Auth::user())) {
+            return response([
+                "message" => "Your are not authorized to delete this post."
+            ], 401);
+        }
+
         $post->delete();
 
         return response([
