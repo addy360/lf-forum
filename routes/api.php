@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthApiController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +27,4 @@ Route::prefix("auth")->group(function () {
 });
 
 Route::apiResource('posts', PostController::class);
+Route::apiResource('comments', CommentController::class);

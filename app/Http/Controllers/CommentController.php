@@ -25,7 +25,16 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $clean_data = $request->validate([
+            "post_id" => ['required'],
+            "message" => ['required'],
+        ]);
+
+        $clean_data['user_id'] = 2;
+
+        $createdComment = Comment::create($clean_data);
+
+        return response(['data' => $createdComment]);
     }
 
     /**
