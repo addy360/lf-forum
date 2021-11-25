@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -30,7 +31,7 @@ class CommentController extends Controller
             "message" => ['required'],
         ]);
 
-        $clean_data['user_id'] = 2;
+        $clean_data['user_id'] = Auth::user()->id;
 
         $createdComment = Comment::create($clean_data);
 

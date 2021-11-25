@@ -27,4 +27,6 @@ Route::prefix("auth")->group(function () {
 });
 
 Route::apiResource('posts', PostController::class);
-Route::apiResource('comments', CommentController::class);
+
+Route::middleware('auth:sanctum')
+    ->apiResource('comments', CommentController::class);
