@@ -74,7 +74,16 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $clean_data = $request->validate([
+            "title" => ['required'],
+            "body" => ['required']
+        ]);
+
+        $post->update($clean_data);
+
+        return response([
+            "message" => "Post has been updated successfully",
+        ]);
     }
 
     /**
