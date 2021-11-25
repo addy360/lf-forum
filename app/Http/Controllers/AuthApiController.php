@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthApiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(["auth:sanctum"])->only('logout');
+    }
     private $token_key = "lyfPlus_token_key";
 
     public function login(Request $request)
@@ -56,5 +61,14 @@ class AuthApiController extends Controller
             "token" => $token
         ];
         return response($response);
+    }
+
+    public function logout()
+    {
+        Auth::user()->tokens()->delete();
+
+        return response([
+            "message" => "User logged out successfully!"
+        ]);
     }
 }
