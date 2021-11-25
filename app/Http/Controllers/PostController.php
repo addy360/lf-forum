@@ -31,7 +31,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // 
+        $clean_data = $request->validate([
+            "title" => ['required'],
+            "body" => ['required']
+        ]);
+
+        $clean_data['user_id'] = 1;
+
+        $created_post = Post::create($clean_data);
+
+        return response([
+            "message" => "Post was created successfully",
+            "data" => $created_post
+        ]);
     }
 
     /**
@@ -73,6 +85,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return response([
+            "message" => "Post '{$post->title}' was deleted successfully"
+        ]);
     }
 }
