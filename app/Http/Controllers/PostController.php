@@ -14,7 +14,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::withCount('comments')
+            ->with(['author' => function ($q) {
+                $q->select('id', 'email')->get();
+            }])
+            ->get();
+
+        return response(["data" => $posts]);
     }
 
     /**
@@ -25,7 +31,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 
     }
 
     /**
@@ -36,7 +42,15 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $post = $post
+            ->loadCount('comments')
+            ->load(['comments.user' => function ($q) {
+                $q->select('id', 'email');
+            }])
+            ->load(['author' => function ($q) {
+                $q->select('id', 'email');
+            }]);
+        return response(['data' => $post]);
     }
 
     /**
