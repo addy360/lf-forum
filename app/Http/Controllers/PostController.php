@@ -16,7 +16,7 @@ class PostController extends Controller
     {
         $posts = Post::withCount('comments')
             ->with(['author' => function ($q) {
-                $q->select('id', 'email')->get();
+                $q->select('id', 'username')->get();
             }])
             ->get();
 
@@ -45,10 +45,10 @@ class PostController extends Controller
         $post = $post
             ->loadCount('comments')
             ->load(['comments.user' => function ($q) {
-                $q->select('id', 'email');
+                $q->select('id', 'username');
             }])
             ->load(['author' => function ($q) {
-                $q->select('id', 'email');
+                $q->select('id', 'username');
             }]);
         return response(['data' => $post]);
     }
