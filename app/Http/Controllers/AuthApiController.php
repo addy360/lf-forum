@@ -10,6 +10,33 @@ class AuthApiController extends Controller
 {
     private $token_key = "lyfPlus_token_key";
 
+    public function login(Request $request)
+    {
+        $clean_data = $request->validate([
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+        $user = User::where("email", $clean_data['email'])->first();
+
+        if (!$user) return response([
+            "message" => "Invalid credentials",
+        ], 422);
+
+        $pass_match = Hash::check($clean_data['password'], $user->password);
+
+
+        if (!$pass_match) return response([
+            "message" => "Invalid credentials",
+        ], 422);
+
+        $response = [
+            "user" => $user,
+            "token" => $user->createToken($this->token_key)->plainTextToken
+        ];
+
+        return response($response);
+    }
+
 
     public function register(Request $request)
     {
